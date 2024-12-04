@@ -6,9 +6,9 @@ Instructions on how to use and use-cases:
 
 We do not have UI or a robust method for inputting language yet.
 
-Within `VariableCompiler.java` is `String input = `
+Main method within `VariableCompiler.java`
 
-Valid input: `String input = "int x = 5; int y = 10;";`
+Valid input: `"int x = 5; int y = 10;"`
 
 Expected Output:
 
