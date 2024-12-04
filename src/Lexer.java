@@ -62,7 +62,7 @@ class Lexer {
                 advance();
                 return new Token(TokenType.SEMICOLON, ";");
             }
-            throw new RuntimeException("Unexpected character: " + currentChar);
+            throw new RuntimeException("Lexical Analysis Failed \n Unexpected character: " + currentChar);
         }
         return new Token(TokenType.EOF, "");
     }

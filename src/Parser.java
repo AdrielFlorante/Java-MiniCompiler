@@ -12,7 +12,7 @@ class Parser {
         if (currentToken.type == tokenType) {
             currentToken = lexer.getNextToken();
         } else {
-            throw new RuntimeException("Unexpected token: " + currentToken);
+            throw new RuntimeException("Syntax Analysis Failed \n Unexpected token: " + currentToken);
         }
     }
 

@@ -11,7 +11,7 @@ class Interpreter {
             VariableDeclaration varDecl = (VariableDeclaration) node;
             symbolTable.declare(varDecl.variableName, varDecl.value);
         } else {
-            throw new RuntimeException("Unexpected AST node");
+            throw new RuntimeException("Semantic Analysis Failed");
         }
     }
 
