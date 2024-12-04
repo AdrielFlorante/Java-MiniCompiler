@@ -1,31 +1,48 @@
+import java.util.Scanner;
+
 public class VariableCompiler {
     public static void main(String[] args) {
-        String input = "int x = 5 @ 10;";
+        Scanner scanner = new Scanner(System.in);
+        Interpreter interpreter = new Interpreter(); // Symbol table persists across runs
 
-        // Step 1: Tokenize
-        Lexer lexer = new Lexer(input);
-
-        // Step 2: Interpret multiple statements
-        Interpreter interpreter = new Interpreter();
-        Parser parser = new Parser(lexer);
+        System.out.println("MiniCompiler");
+        System.out.println("Type 'exit' to quit.\n");
 
         while (true) {
-            try {
-                // Parse a single statement
-                AST node = parser.parse();
+            System.out.print("Input: ");
+            String input = scanner.nextLine();
 
-                // Stop if EOF is reached
-                if (node == null) break;
-
-                // Interpret the parsed statement
-                interpreter.interpret(node);
-            } catch (RuntimeException e) {
-                System.err.println("Error: " + e.getMessage());
+            // Exit condition
+            if (input.trim().equalsIgnoreCase("exit")) {
+                System.out.println("Exiting MiniCompiler. Goodbye!");
                 break;
             }
+
+            // Step 1: Tokenize
+            Lexer lexer = new Lexer(input);
+            Parser parser = new Parser(lexer);
+
+            try {
+                // Parse and interpret multiple statements
+                while (true) {
+                    AST node = parser.parse();
+
+                    // Stop if EOF is reached
+                    if (node == null) break;
+
+                    // Interpret the parsed statement
+                    interpreter.interpret(node);
+                }
+            } catch (RuntimeException e) {
+                System.err.println("Error: " + e.getMessage());
+            }
+
+            // Step 2: Print Symbol Table after each input
+            System.out.println("Current Symbol Table:");
+            interpreter.printSymbolTable();
+            System.out.println();
         }
 
-        // Step 3: Print Symbol Table
-        interpreter.printSymbolTable();
+        scanner.close(); // Close the scanner to free resources
     }
 }
