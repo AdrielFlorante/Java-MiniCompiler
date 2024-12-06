@@ -4,31 +4,36 @@ class Lexer {
     private int pos = 0;
     private char currentChar;
 
+    // Constructor that initializes the lexer with the input text
     Lexer(String text) {
         this.text = text;
         currentChar = text.charAt(pos);
     }
 
+    // Advances to the next character in the input text
     private void advance() {
         pos++;
         currentChar = pos < text.length() ? text.charAt(pos) : '\0';
     }
 
+    // Skips whitespace characters
     private void skipWhitespace() {
         while (Character.isWhitespace(currentChar)) {
             advance();
         }
     }
 
+    // Extracts an identifier (variable name)
     private String identifier() {
         StringBuilder result = new StringBuilder();
-        while (Character.isLetterOrDigit(currentChar)) {
+        while (Character.isLetterOrDigit(currentChar) || currentChar == '_') {
             result.append(currentChar);
             advance();
         }
         return result.toString();
     }
 
+    // Extracts a number (integer literal)
     private String number() {
         StringBuilder result = new StringBuilder();
         while (Character.isDigit(currentChar)) {
@@ -38,32 +43,45 @@ class Lexer {
         return result.toString();
     }
 
+    // Main method to get the next token from the input text
     public Token getNextToken() {
-        while (currentChar != '\0') {
+        while (currentChar != '\0') { // While we haven't reached the end of input
             if (Character.isWhitespace(currentChar)) {
-                skipWhitespace();
+                skipWhitespace(); // Skip whitespace characters
                 continue;
             }
+
+            // Handle identifiers (e.g., "x", "y")
             if (Character.isLetter(currentChar)) {
                 String value = identifier();
                 if (value.equals("int")) {
-                    return new Token(TokenType.INT, value);
+                    return new Token(TokenType.INT, value); // Return INT keyword
                 }
-                return new Token(TokenType.IDENTIFIER, value);
+                return new Token(TokenType.IDENTIFIER, value); // Return identifier
             }
+
+            // Handle numbers (e.g., 5, 10)
             if (Character.isDigit(currentChar)) {
-                return new Token(TokenType.NUMBER, number());
+                return new Token(TokenType.NUMBER, number()); // Return number
             }
+
+            // Handle assignment operator (=)
             if (currentChar == '=') {
                 advance();
-                return new Token(TokenType.ASSIGN, "=");
+                return new Token(TokenType.ASSIGN, "="); // Return assignment operator
             }
+
+            // Handle semicolon (;)
             if (currentChar == ';') {
                 advance();
-                return new Token(TokenType.SEMICOLON, ";");
+                return new Token(TokenType.SEMICOLON, ";"); // Return semicolon
             }
-            throw new RuntimeException("Lexical Analysis Failed \n Unexpected character: " + currentChar);
+
+            // If we encounter an unexpected character, throw an error
+            throw new RuntimeException("Lexical Error: Unexpected character: " + currentChar);
         }
+
+        // Return EOF (End Of File) token when we reach the end of the input text
         return new Token(TokenType.EOF, "");
     }
 }

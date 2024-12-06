@@ -1,48 +1,52 @@
-import java.util.Scanner;
-
 public class VariableCompiler {
-    public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
-        Interpreter interpreter = new Interpreter(); // Symbol table persists across runs
+    private Interpreter interpreter;
+    private Parser parser;
+    private Lexer lexer;
 
-        System.out.println("MiniCompiler");
-        System.out.println("Type 'exit' to quit.\n");
+    // Initialize components
+    public void initialize(String input) {
+        lexer = new Lexer(input);
+        parser = new Parser(lexer);
+        interpreter = new Interpreter();
+    }
 
-        while (true) {
-            System.out.print("Input: ");
-            String input = scanner.nextLine();
-
-            // Exit condition
-            if (input.trim().equalsIgnoreCase("exit")) {
-                System.out.println("Exiting MiniCompiler. Goodbye!");
-                break;
+    // Lexical Analysis Phase
+    public void lexicalAnalysis() {
+        try {
+            while (true) {
+                Token token = lexer.getNextToken();
+                if (token.type == TokenType.EOF) break;
+                System.out.println("Token: " + token);
             }
-
-            // Step 1: Tokenize
-            Lexer lexer = new Lexer(input);
-            Parser parser = new Parser(lexer);
-
-            try {
-                // Parse and interpret multiple statements
-                while (true) {
-                    AST node = parser.parse();
-
-                    // Stop if EOF is reached
-                    if (node == null) break;
-
-                    // Interpret the parsed statement
-                    interpreter.interpret(node);
-                }
-            } catch (RuntimeException e) {
-                System.err.println("Error: " + e.getMessage());
-            }
-
-            // Step 2: Print Symbol Table after each input
-            System.out.println("Current Symbol Table:");
-            interpreter.printSymbolTable();
-            System.out.println();
+        } catch (RuntimeException e) {
+            System.err.println("Lexical Error: " + e.getMessage());
         }
+    }
 
-        scanner.close(); // Close the scanner to free resources
+    // Syntax Analysis Phase
+    public void syntaxAnalysis() {
+        try {
+            while (true) {
+                AST node = parser.parse();
+                if (node == null) break;
+                System.out.println("AST Node: " + node);
+            }
+        } catch (RuntimeException e) {
+            System.err.println("Syntax Error: " + e.getMessage());
+        }
+    }
+
+    // Semantic Analysis Phase
+    public void semanticAnalysis() {
+        try {
+            while (true) {
+                AST node = parser.parse();
+                if (node == null) break;
+                interpreter.interpret(node);
+            }
+            interpreter.printSymbolTable();
+        } catch (RuntimeException e) {
+            System.err.println("Semantic Error: " + e.getMessage());
+        }
     }
 }
