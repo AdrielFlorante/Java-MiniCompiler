@@ -29,8 +29,9 @@ class SymbolTable {
     }
 
     // Print all declared variables
-    public void printSymbolTable() {
-        System.out.println("Symbol Table:");
-        variables.forEach((key, value) -> System.out.println(key + " = " + value));
+    public String printSymbolTable() {
+        StringBuilder sb = new StringBuilder("Symbol Table:\n");
+        variables.forEach((key, value) -> sb.append(key).append(" = ").append(value).append("\n"));
+        return sb.toString();
     }
 }

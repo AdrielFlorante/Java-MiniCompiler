@@ -176,34 +176,27 @@ public class Application extends JFrame {
     }
 
     private void handleAllPhases() {
-        String input = compilerInputTextArea.getText(); // Get text from JTextPane
-        boolean allPhasesPassed = true;
+        String input = compilerInputTextArea.getText();
+        compilerOutputTextArea.setText(""); // Clear the previous output
+        // Step 1: Initialize Lexer with input
+        Lexer lexer = new Lexer(input);
+        // Step 2: Initialize Parser with Lexer (token stream)
+        Parser parser = new Parser(lexer);
+        // Step 3: Parse the input to get the AST (Abstract Syntax Tree)
+        AST ast = parser.parse();
 
-        // Step 1: Run Lexical Analysis
-        handleLexical();
+        // Step 4: Initialize the Interpreter (for semantic analysis)
+        Interpreter interpreter = new Interpreter();
 
-        // Step 2: Run Syntax Analysis if Lexical passed
-        if (!compilerOutputTextArea.getText().contains("Lexical Error")) {
-            handleSyntax();
-        } else {
-            allPhasesPassed = false;
-        }
+        // Step 5: Perform semantic analysis (type checking, variable declarations, etc.)
+        interpreter.interpret(ast); // This will throw errors if semantic issues are found
 
-        // Step 3: Run Semantic Analysis if Syntax passed
-        if (!compilerOutputTextArea.getText().contains("Syntax Error") && allPhasesPassed) {
-            handleSemantic();
-        } else {
-            allPhasesPassed = false;
-        }
+        // Step 6: Output success message to the output area
+        compilerOutputTextArea.append("No errors found.\n");
+        compilerOutputTextArea.append("Symbol Table:\n");
 
-        // Step 4: If all phases pass, append the symbol table
-        if (allPhasesPassed) {
-            compilerOutputTextArea.append("All phases passed. Symbol table:\n");
-            Interpreter interpreter = new Interpreter();
-            interpreter.printSymbolTable(); // Print the symbol table if all phases pass
-        } else {
-            compilerOutputTextArea.append("Compilation failed due to previous errors.\n");
-        }
+        String symbolTableString = interpreter.printSymbolTable();
+        compilerOutputTextArea.append(symbolTableString);
     }
 
     //File exploere

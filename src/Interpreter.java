@@ -15,7 +15,7 @@ class Interpreter {
         }
     }
 
-    public void printSymbolTable() {
-        symbolTable.printSymbolTable();
+    public String printSymbolTable() {
+        return symbolTable.printSymbolTable();
     }
 }
