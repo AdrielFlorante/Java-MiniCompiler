@@ -90,6 +90,14 @@
         </constraints>
         <properties/>
       </component>
+      <component id="78e2c" class="javax.swing.JButton" binding="enterButton">
+        <constraints>
+          <grid row="5" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value="Enter"/>
+        </properties>
+      </component>
     </children>
   </grid>
 </form>

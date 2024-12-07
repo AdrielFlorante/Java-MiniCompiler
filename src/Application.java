@@ -1,5 +1,4 @@
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
@@ -18,6 +17,7 @@ public class Application extends JFrame {
     private JPanel mainPanel;
     private JButton clearButton;
     private JButton runCodeButton;
+    private JButton enterButton;
     private JFrame frame;
 
     public Application() {
@@ -32,12 +32,11 @@ public class Application extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
 
-        // Input Area
-        JTextPane compilerInputTextPane = new JTextPane();
-        compilerInputTextPane.setFont(new Font("Monospaced", Font.PLAIN, 12));
-        JScrollPane inputScrollPane = new JScrollPane(compilerInputTextPane);
-        inputScrollPane.setBorder(BorderFactory.createTitledBorder("Input"));
-
+        //disable most buttons
+        lexicalAnalysisButton.setEnabled(false);
+        syntaxAnalysisButton.setEnabled(false);
+        semanticAnalysisButton.setEnabled(false);
+        runCodeButton.setEnabled(false);
 
         // Buttons
         openFileButton.addActionListener(new ActionListener() {
@@ -48,6 +47,7 @@ public class Application extends JFrame {
 
                 if(!fileContents.isEmpty()){
                     compilerInputTextArea.setText(contents);
+                    lexicalAnalysisButton.setEnabled(true);
                 }
 
             }
@@ -76,17 +76,31 @@ public class Application extends JFrame {
                 handleAllPhases();
             }
         });
+        enterButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(!compilerInputTextArea.getText().isEmpty()){
+                    lexicalAnalysisButton.setEnabled(true);
+                }
+            }
+        });
         clearButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 compilerInputTextArea.setText("");
                 compilerOutputTextArea.setText("");
+                lexicalAnalysisButton.setEnabled(false);
+                syntaxAnalysisButton.setEnabled(false);
+                semanticAnalysisButton.setEnabled(false);
+                runCodeButton.setEnabled(false);
             }
         });
     }
 
+    //check if there's an input
+
     private void handleLexical() {
-        String input = compilerInputTextArea.getText(); // Get text from JTextPane
+        String input = compilerInputTextArea.getText();// Get text from JTextPane
         compilerOutputTextArea.setText(""); // Clear previous output
         compilerOutputTextArea.append("Lexical Analysis:\n");
 
@@ -102,6 +116,8 @@ public class Application extends JFrame {
 
             // Step 3: Lexical analysis completed
             compilerOutputTextArea.append("Lexical Analysis Complete\n");
+            syntaxAnalysisButton.setEnabled(true);
+
         } catch (RuntimeException ex) {
             // If lexical error occurs, display error message
             compilerOutputTextArea.append("Lexical Error: " + ex.getMessage() + "\n");
@@ -123,6 +139,7 @@ public class Application extends JFrame {
 
             // Step 3: Syntax analysis completed
             compilerOutputTextArea.append("Syntax Analysis Complete\n");
+            semanticAnalysisButton.setEnabled(true);
         } catch (RuntimeException ex) {
             // If syntax error occurs, display error message
             compilerOutputTextArea.append("Syntax Error: " + ex.getMessage() + "\n");
@@ -150,6 +167,7 @@ public class Application extends JFrame {
 
             // Step 6: Output success message to the output area
             compilerOutputTextArea.append("Semantic Analysis Complete: No errors found.\n");
+            runCodeButton.setEnabled(true);
 
         } catch (RuntimeException ex) {
             // If any semantic error occurs, show the error message
