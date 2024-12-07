@@ -17,14 +17,43 @@ class Parser {
     }
 
     public VariableDeclaration parseVariableDeclaration() {
-        eat(TokenType.INT); // Expect "int"
-        String variableName = currentToken.value;
-        eat(TokenType.IDENTIFIER); // Expect variable name
-        eat(TokenType.ASSIGN); // Expect "="
-        int value = Integer.parseInt(currentToken.value);
-        eat(TokenType.NUMBER); // Expect number
-        eat(TokenType.SEMICOLON); // Expect ";"
-        return new VariableDeclaration(variableName, value);
+        //IF INTEGER
+        if(currentToken.type == TokenType.INT){
+            eat(TokenType.INT); // Expect "int"
+            String variableName = currentToken.value;
+            eat(TokenType.IDENTIFIER); // Expect variable name
+            //IF NO VALUE
+            if(currentToken.type == TokenType.SEMICOLON){
+                eat(TokenType.SEMICOLON);
+                return new VariableDeclaration(variableName, null);
+            }
+            else if(currentToken.type == TokenType.ASSIGN){
+                eat(TokenType.ASSIGN); // Expect "="
+                String value = currentToken.value;
+                eat(TokenType.NUMBER); // Expect number
+                eat(TokenType.SEMICOLON); // Expect ";"
+                return new VariableDeclaration(variableName, value);
+            }
+        }
+        //IF STRING
+        else if (currentToken.type == TokenType.STRING) {
+            eat(TokenType.STRING);
+            String variableName = currentToken.value;
+            eat(TokenType.IDENTIFIER);
+            //IF NO VALUE
+            if(currentToken.type == TokenType.SEMICOLON){
+                eat(TokenType.SEMICOLON);
+                return new VariableDeclaration(variableName, null);
+            }
+            else if(currentToken.type == TokenType.ASSIGN){
+                eat(TokenType.ASSIGN);
+                String value = currentToken.value;
+                eat(TokenType.STRING);
+                eat(TokenType.SEMICOLON);
+                return new VariableDeclaration(variableName, value);
+            }
+        }
+        throw new RuntimeException("Syntax Analysis Failed");
     }
 
     public AST parse() {

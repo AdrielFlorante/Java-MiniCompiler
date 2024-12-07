@@ -2,7 +2,7 @@ import java.util.*;
 
 // Token Types
 enum TokenType {
-    INT, IDENTIFIER, NUMBER, ASSIGN, SEMICOLON, EOF
+    STRING, INT, IDENTIFIER, NUMBER, ASSIGN, SEMICOLON, EOF
 }
 
 // Token Class
