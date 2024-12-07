@@ -2,10 +2,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.*;
+import javax.swing.filechooser.*;
+import java.util.*;
+import java.util.List;
 
 public class Application extends JFrame {
     private VariableCompiler compiler;
-    private JTextPane compilerInputTextPane;
+    private JTextArea compilerInputTextArea;
     private JTextArea compilerOutputTextArea;
     private JButton openFileButton;
     private JButton lexicalAnalysisButton;
@@ -14,6 +18,7 @@ public class Application extends JFrame {
     private JPanel mainPanel;
     private JButton clearButton;
     private JButton runCodeButton;
+    private JFrame frame;
 
     public Application() {
         compiler = new VariableCompiler();
@@ -38,6 +43,12 @@ public class Application extends JFrame {
         openFileButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                fileContents = openFileExplorer();
+                contents = listToString(fileContents);
+
+                if(!fileContents.isEmpty()){
+                    compilerInputTextArea.setText(contents);
+                }
 
             }
         });
@@ -65,10 +76,17 @@ public class Application extends JFrame {
                 handleAllPhases();
             }
         });
+        clearButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                compilerInputTextArea.setText("");
+                compilerOutputTextArea.setText("");
+            }
+        });
     }
 
     private void handleLexical() {
-        String input = compilerInputTextPane.getText(); // Get text from JTextPane
+        String input = compilerInputTextArea.getText(); // Get text from JTextPane
         compilerOutputTextArea.setText(""); // Clear previous output
         compilerOutputTextArea.append("Lexical Analysis:\n");
 
@@ -91,7 +109,7 @@ public class Application extends JFrame {
     }
 
     private void handleSyntax() {
-        String input = compilerInputTextPane.getText(); // Get text from JTextPane
+        String input = compilerInputTextArea.getText(); // Get text from JTextPane
         compilerOutputTextArea.setText(""); // Clear previous output
         compilerOutputTextArea.append("Syntax Analysis:\n");
 
@@ -112,7 +130,7 @@ public class Application extends JFrame {
     }
 
     private void handleSemantic() {
-        String input = compilerInputTextPane.getText(); // Get text from JTextPane
+        String input = compilerInputTextArea.getText(); // Get text from JTextPane
         compilerOutputTextArea.setText(""); // Clear previous output
         compilerOutputTextArea.append("Semantic Analysis:\n");
 
@@ -140,7 +158,7 @@ public class Application extends JFrame {
     }
 
     private void handleAllPhases() {
-        String input = compilerInputTextPane.getText(); // Get text from JTextPane
+        String input = compilerInputTextArea.getText(); // Get text from JTextPane
         boolean allPhasesPassed = true;
 
         // Step 1: Run Lexical Analysis
@@ -168,6 +186,63 @@ public class Application extends JFrame {
         } else {
             compilerOutputTextArea.append("Compilation failed due to previous errors.\n");
         }
+    }
+
+    //File exploere
+    List<String> fileContents = new ArrayList<String>();
+    String contents = "none";
+    public List<String> openFileExplorer()
+    {
+        JFileChooser fileChooser = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Java and Text Files", "java", "txt");
+        fileChooser.setFileFilter(filter);
+        int result = fileChooser.showOpenDialog(frame);
+
+        if (result == JFileChooser.APPROVE_OPTION)
+        {
+            File selectedFile = fileChooser.getSelectedFile();
+            fileContents = displayFileContents(selectedFile);
+        }
+        return fileContents;
+
+    }
+
+    private String listToString(List<String> list)
+    {
+        // convert list to string xdd
+        return String.join("\n", list);
+    }
+
+    private List<String> displayFileContents(File file)
+    {
+        try
+        {
+            // FileReader reads text files in the default encoding.
+            FileReader fileReader = new FileReader(file);
+
+            // Wrap FileReader in BufferedReader.
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+            // Read the file line by line and display the contents.
+            String line;
+            while ((line = bufferedReader.readLine()) != null)
+            {
+                fileContents.add(line);
+            }
+
+            contents = fileContents.toString();
+
+            // Close the BufferedReader.
+            bufferedReader.close();
+
+
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+
+        }
+        return fileContents;
     }
 
     public static void main(String[] args) {
