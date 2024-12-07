@@ -2,10 +2,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 class SymbolTable {
-    private final Map<String, Integer> variables = new HashMap<>();
+    private final Map<String, String> variables = new HashMap<>();
 
     // Declare a new variable in the symbol table
-    public void declare(String name, int value) {
+    public void declare(String name, String value) {
         if (variables.containsKey(name)) {
             throw new RuntimeException("Variable already declared: " + name);
         }
@@ -13,7 +13,7 @@ class SymbolTable {
     }
 
     // Get the value of a variable
-    public int get(String name) {
+    public String get(String name) {
         if (!variables.containsKey(name)) {
             throw new RuntimeException("Variable not found: " + name);
         }
@@ -21,7 +21,7 @@ class SymbolTable {
     }
 
     // Update the value of an existing variable
-    public void update(String name, int value) {
+    public void update(String name, String value) {
         if (!variables.containsKey(name)) {
             throw new RuntimeException("Variable not found: " + name);
         }

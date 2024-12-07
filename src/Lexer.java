@@ -43,6 +43,18 @@ class Lexer {
         return result.toString();
     }
 
+    private String string() {
+        StringBuilder result = new StringBuilder();
+        advance(); // Skip the opening quote
+        while (currentChar != '"' && currentChar != '\0') {
+            result.append(currentChar);
+            advance();
+        }
+        advance(); // Skip the closing quote
+        return result.toString();
+    }
+
+
     // Main method to get the next token from the input text
     public Token getNextToken() {
         while (currentChar != '\0') { // While we haven't reached the end of input
@@ -57,12 +69,21 @@ class Lexer {
                 if (value.equals("int")) {
                     return new Token(TokenType.INT, value); // Return INT keyword
                 }
+                else if (value.equals("String")) {
+                    return new Token(TokenType.STRING, value);// Return STRING keyword
+                }
                 return new Token(TokenType.IDENTIFIER, value); // Return identifier
             }
 
             // Handle numbers (e.g., 5, 10)
             if (Character.isDigit(currentChar)) {
                 return new Token(TokenType.NUMBER, number()); // Return number
+            }
+
+            // Handles string values
+            if (currentChar == '"') {
+                String value = string();
+                return new Token(TokenType.STRING, value); // Return string literal
             }
 
             // Handle assignment operator (=)
