@@ -154,19 +154,28 @@ public class Application extends JFrame {
         try {
             // Step 1: Initialize Lexer with input
             Lexer lexer = new Lexer(input);
+
             // Step 2: Initialize Parser with Lexer (token stream)
             Parser parser = new Parser(lexer);
-            // Step 3: Parse the input to get the AST (Abstract Syntax Tree)
-            AST ast = parser.parse();
+
+            // Step 3: Parse the input to get the AST list (Abstract Syntax Tree)
+            List<AST> astList = parser.parse();
 
             // Step 4: Initialize the Interpreter (for semantic analysis)
             Interpreter interpreter = new Interpreter();
 
-            // Step 5: Perform semantic analysis (type checking, variable declarations, etc.)
-            interpreter.interpret(ast); // This will throw errors if semantic issues are found
+            // Step 5: Perform semantic analysis on each AST node
+            for (AST node : astList) {
+                interpreter.interpret(node); // This will throw errors if semantic issues are found
+            }
 
             // Step 6: Output success message to the output area
             compilerOutputTextArea.append("Semantic Analysis Complete: No errors found.\n");
+
+            // Step 7: Display the symbol table
+            compilerOutputTextArea.append(interpreter.printSymbolTable());
+
+            // Enable the "Run Code" button if all phases pass
             runCodeButton.setEnabled(true);
 
         } catch (RuntimeException ex) {
@@ -175,29 +184,42 @@ public class Application extends JFrame {
         }
     }
 
+
     private void handleAllPhases() {
         String input = compilerInputTextArea.getText();
         compilerOutputTextArea.setText(""); // Clear the previous output
-        // Step 1: Initialize Lexer with input
-        Lexer lexer = new Lexer(input);
-        // Step 2: Initialize Parser with Lexer (token stream)
-        Parser parser = new Parser(lexer);
-        // Step 3: Parse the input to get the AST (Abstract Syntax Tree)
-        AST ast = parser.parse();
 
-        // Step 4: Initialize the Interpreter (for semantic analysis)
-        Interpreter interpreter = new Interpreter();
+        try {
+            // Step 1: Initialize Lexer with input
+            Lexer lexer = new Lexer(input);
 
-        // Step 5: Perform semantic analysis (type checking, variable declarations, etc.)
-        interpreter.interpret(ast); // This will throw errors if semantic issues are found
+            // Step 2: Initialize Parser with Lexer (token stream)
+            Parser parser = new Parser(lexer);
 
-        // Step 6: Output success message to the output area
-        compilerOutputTextArea.append("No errors found.\n");
-        compilerOutputTextArea.append("Symbol Table:\n");
+            // Step 3: Parse the input to get a list of AST nodes
+            List<AST> astList = parser.parse();
 
-        String symbolTableString = interpreter.printSymbolTable();
-        compilerOutputTextArea.append(symbolTableString);
+            // Step 4: Initialize the Interpreter (for semantic analysis)
+            Interpreter interpreter = new Interpreter();
+
+            // Step 5: Perform semantic analysis on each AST node
+            for (AST node : astList) {
+                interpreter.interpret(node); // Process each node
+            }
+
+            // Step 6: Output success message to the output area
+            compilerOutputTextArea.append("Lexical, Syntax, and Semantic Analysis Complete: No errors found.\n");
+
+            // Step 7: Append the symbol table to the output
+            String symbolTableString = interpreter.printSymbolTable();
+            compilerOutputTextArea.append(symbolTableString);
+
+        } catch (RuntimeException ex) {
+            // If any error occurs during any phase, show the error message
+            compilerOutputTextArea.append("Error: " + ex.getMessage() + "\n");
+        }
     }
+
 
     //File exploere
     List<String> fileContents = new ArrayList<String>();
