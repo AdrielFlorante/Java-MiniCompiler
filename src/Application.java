@@ -15,9 +15,8 @@ public class Application extends JFrame {
     private JButton semanticAnalysisButton;
     private JPanel mainPanel;
     private JButton clearButton;
-    private JButton runCodeButton;
     private JButton enterButton;
-    private JFrame frame;
+    private JFrame openFileFrame; // This is for when you click on openFileButton
 
     public Application() {
         createUI();
@@ -34,7 +33,6 @@ public class Application extends JFrame {
         lexicalAnalysisButton.setEnabled(false);
         syntaxAnalysisButton.setEnabled(false);
         semanticAnalysisButton.setEnabled(false);
-        runCodeButton.setEnabled(false);
 
         // Buttons
         openFileButton.addActionListener(new ActionListener() {
@@ -68,12 +66,6 @@ public class Application extends JFrame {
                 handleSemantic();
             }
         });
-        runCodeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                handleAllPhases();
-            }
-        });
         enterButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -90,7 +82,6 @@ public class Application extends JFrame {
                 lexicalAnalysisButton.setEnabled(false);
                 syntaxAnalysisButton.setEnabled(false);
                 semanticAnalysisButton.setEnabled(false);
-                runCodeButton.setEnabled(false);
             }
         });
     }
@@ -173,9 +164,6 @@ public class Application extends JFrame {
             // Step 7: Display the symbol table
             compilerOutputTextArea.append(interpreter.printSymbolTable());
 
-            // Enable the "Run Code" button if all phases pass
-            runCodeButton.setEnabled(true);
-
         } catch (RuntimeException ex) {
             compilerOutputTextArea.append("Semantic Error: " + ex.getMessage() + "\n");
         }
@@ -225,7 +213,7 @@ public class Application extends JFrame {
         JFileChooser fileChooser = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Java and Text Files", "java", "txt");
         fileChooser.setFileFilter(filter);
-        int result = fileChooser.showOpenDialog(frame);
+        int result = fileChooser.showOpenDialog(openFileFrame);
 
         if (result == JFileChooser.APPROVE_OPTION)
         {
