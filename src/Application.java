@@ -7,7 +7,6 @@ import java.util.*;
 import java.util.List;
 
 public class Application extends JFrame {
-    private VariableCompiler compiler;
     private JTextArea compilerInputTextArea;
     private JTextArea compilerOutputTextArea;
     private JButton openFileButton;
@@ -21,7 +20,6 @@ public class Application extends JFrame {
     private JFrame frame;
 
     public Application() {
-        compiler = new VariableCompiler();
         createUI();
     }
 
