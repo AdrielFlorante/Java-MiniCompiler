@@ -179,7 +179,6 @@ public class Application extends JFrame {
             runCodeButton.setEnabled(true);
 
         } catch (RuntimeException ex) {
-            // If any semantic error occurs, show the error message
             compilerOutputTextArea.append("Semantic Error: " + ex.getMessage() + "\n");
         }
     }
@@ -215,7 +214,6 @@ public class Application extends JFrame {
             compilerOutputTextArea.append(symbolTableString);
 
         } catch (RuntimeException ex) {
-            // If any error occurs during any phase, show the error message
             compilerOutputTextArea.append("Error: " + ex.getMessage() + "\n");
         }
     }
