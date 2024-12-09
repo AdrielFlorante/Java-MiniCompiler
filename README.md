@@ -35,8 +35,11 @@ Pass Lexical and Syntax, but Fail Semantics
 These inputs are valid syntactically, but the semantics (meaning or rules of usage) are incorrect or unsupported.
 Example Input:
 ```
-int x = y;
+int x = 0;
+int x = 5;
 ```
+
+We cannot redeclare variables. However, this still passes Lexical and Syntax analysis because it only violates Semantics rules.
 
 Scenario C:
 
@@ -47,25 +50,3 @@ Example Input:
 ```
 int x = 5 @ 10;
 ```
-
-For Improving Lexical, Syntax, and Semantic Analysis
-
-Here are some suggestions to enhance each phase of the compiler
-
-By yours truly, Uncle GPT:
-
-    Lexical Analysis:
-        Add error recovery for unknown tokens (e.g., skipping invalid characters instead of throwing an exception).
-        Expand the token set to support additional keywords or symbols as needed.
-
-    Syntax Analysis:
-        Add support for more complex expressions (e.g., int x = 5 + 2;).
-        Detect missing or misplaced tokens more robustly (e.g., unmatched parentheses or semicolons).
-
-    Semantic Analysis:
-        Implement a type-checking system.
-        Ensure variables are declared before use and not redeclared in the same scope.
-        Extend the symbol table to track variable types and scope.
-
-
-"Proof of concept." - A
