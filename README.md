@@ -4,9 +4,7 @@ All four phases work.
 
 Instructions on how to use and use-cases:
 
-We do not have UI or a robust method for inputting language yet.
-
-Main method within `VariableCompiler.java`
+Main method within `Application.java`
 
 Valid input: `"int x = 5; int y = 10;"`
 
