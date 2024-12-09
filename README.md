@@ -1,4 +1,4 @@
-# Java MiniCompiler
+#MiniCompiler
 
 *This Mini Compiler can support many scenarios such as these: *
 
